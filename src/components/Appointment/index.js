@@ -6,6 +6,7 @@ import Show from "./Show";
 import Confirm from "./Confirm";
 import Status from "./Status";
 import Error from "./Error";
+
 import "components/Appointment/styles.scss";
 
 export default function Appointment(props) {
