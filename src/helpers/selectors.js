@@ -6,8 +6,6 @@ export function getAppointmentsForDay(state, day) {
   const appointmentsIds = appointmentDayId[0];
   const appointment = [];
 
-  console.log("appointmentDayId", appointmentDayId[0]);
-  // console.log(appointmentsIds.length);
   //check the case that only have  appointment//
 
   if (appointmentsIds === undefined) {
@@ -20,6 +18,4 @@ export function getAppointmentsForDay(state, day) {
     console.log("appointment", appointment);
     return appointment;
   }
-
-  //return the value that the id match with states.appointments//
 }
