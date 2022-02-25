@@ -7,7 +7,7 @@ import { getAppointmentsForDay } from "helpers/selectors";
 
 import "components/Application.scss";
 
-export default function Application(props) {
+export default function Application() {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -33,7 +33,17 @@ export default function Application(props) {
   }, []);
 
   const appointments = getAppointmentsForDay(state, state.day).map(
-    (appointment) => <Appointment key={appointment.id} {...appointment} />
+    (appointment) => {
+      const interview = getInterview(state, appointment.interview);
+
+      return (
+        <Appointment
+          key={appointment.id}
+          interview={interview}
+          {...appointment}
+        />
+      );
+    }
   );
 
   return (
@@ -46,7 +56,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList days={state.days} value={state.day} onChange={setDay} />
+          <DayList days={state.days} value={state.day} setDay={setDay} />
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
