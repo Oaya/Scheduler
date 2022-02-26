@@ -28,3 +28,22 @@ export function getInterview(state, interview) {
     return { student, interviewer };
   }
 }
+
+export function getInterviewersForDay(state, day) {
+  //find the object match with provided day
+  const interviewersId = state.days.filter((stateDay) => stateDay.name === day);
+  const interviewersIds = interviewersId[0];
+  const interviewers = [];
+
+  //check the cases that have interviewers//
+  if (interviewersIds === undefined) {
+    return interviewers;
+  } else {
+    interviewersIds.interviewers.forEach((element) => {
+      interviewers.push(state.interviewers[element]);
+    });
+
+    console.log(interviewers);
+    return interviewers;
+  }
+}
