@@ -43,7 +43,6 @@ export function getInterviewersForDay(state, day) {
       interviewers.push(state.interviewers[element]);
     });
 
-    console.log(interviewers);
     return interviewers;
   }
 }

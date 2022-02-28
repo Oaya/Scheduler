@@ -3,7 +3,12 @@ import axios from "axios";
 
 import DayList from "./DayList";
 import Appointment from "./Appointment";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from "helpers/selectors";
 
 import "components/Application.scss";
 
@@ -12,6 +17,7 @@ export default function Application() {
     day: "Monday",
     days: [],
     appointments: {},
+    interviewers: {},
   });
 
   const setDay = (day) => setState({ ...state, day });
@@ -19,19 +25,40 @@ export default function Application() {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://localhost:8001/api/days`),
-      axios.get(`http://localhost:8001/api/appointments`),
-      axios.get(`http://localhost:8001/api/interviewers`),
+      axios.get(`/api/days`),
+      axios.get(`/api/appointments`),
+      axios.get(`/api/interviewers`),
     ]).then((all) => {
-      console.log(all[0].data, all[1].data, all[2].data);
       setState((prev) => ({
         ...prev,
         days: all[0].data,
         appointments: all[1].data,
+        interviewers: all[2].data,
       }));
     });
   }, []);
 
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    setState({
+      ...state,
+      appointments,
+    });
+  }
+
+  //Get available interviewer for the day//
+  const interviewers = getInterviewersForDay(state, state.day);
+
+  //Get booked appointments for the day//
   const appointments = getAppointmentsForDay(state, state.day).map(
     (appointment) => {
       const interview = getInterview(state, appointment.interview);
@@ -39,8 +66,11 @@ export default function Application() {
       return (
         <Appointment
           key={appointment.id}
+          id={appointment.id}
+          time={appointment.time}
           interview={interview}
-          {...appointment}
+          interviewers={interviewers}
+          bookInterview={bookInterview}
         />
       );
     }
