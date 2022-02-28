@@ -48,11 +48,17 @@ export default function Application() {
       ...state.appointments,
       [id]: appointment,
     };
+    //wait until put the data to database and then
+    console.log({ interview });
+    return axios.put(`/api/appointments/${id}`, { interview })
+      .then((res) => {
+        console.log(res);
 
-    setState({
-      ...state,
-      appointments,
-    });
+        setState((prev) => ({
+          ...prev,
+          appointments,
+        }));
+      });
   }
 
   //Get available interviewer for the day//

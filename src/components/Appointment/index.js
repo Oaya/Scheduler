@@ -11,11 +11,13 @@ import Form from "./Form";
 // import Error from "./Error";
 
 import "components/Appointment/styles.scss";
+import Status from "./Status";
 
 //MODE FOR APPOINTMENT//
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
+const SAVING = "SAVING"
 
 export default function Appointment({
   id,
@@ -31,12 +33,14 @@ export default function Appointment({
   }
 
   function save(name, interviewer) {
+    transition(SAVING)
     const interview = {
       student: name,
       interviewer,
     };
-    bookInterview(id, interview);
-    transition(SHOW);
+    bookInterview(id, interview).then(() => {
+      transition(SHOW);
+    });
   }
 
   return (
@@ -53,6 +57,7 @@ export default function Appointment({
           onSave={save}
         />
       )}
+      {mode === SAVING && <Status message="Saving" />}
     </article>
   );
 }
