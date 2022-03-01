@@ -27,9 +27,26 @@ export default function useApplicationData() {
     });
   }, []);
 
+  function countSpots(id) {
+    const currentDay = state.days.find((dayItem) => dayItem.name === state.day)
+    console.log({ currentDay });
+    const appointmentIds = currentDay.appointments
+    console.log({ appointmentIds });
+
+    const interviewsForDay = appointmentIds.map((id) => state.appointments[id].interview)
+
+    console.log({ interviewsForDay });
+
+    const emptySpotsForDay = interviewsForDay.filter((interview) => !interview)
+    const spots = emptySpotsForDay.length
+
+    console.log({ spots });
+    return spots
+  }
+
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
-    console.log(id, interview);
+
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -42,14 +59,19 @@ export default function useApplicationData() {
 
     return axios.put(`/api/appointments/${id}`, { interview })
       .then((res) => {
-        console.log(res);
+
+        countSpots()
 
         setState((prev) => ({
           ...prev,
           appointments,
+
+
         }));
       });
   }
+
+
 
   //Delete appointment with given id//
 
@@ -66,7 +88,7 @@ export default function useApplicationData() {
 
     return axios.delete(`/api/appointments/${id}`)
       .then((res) => {
-        console.log(res);
+        countSpots()
         setState((prev) => ({
           ...prev,
           appointments
