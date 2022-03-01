@@ -38,6 +38,7 @@ export default function Application() {
     });
   }, []);
 
+  //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
     console.log(id, interview);
     const appointment = {
@@ -61,6 +62,30 @@ export default function Application() {
       });
   }
 
+  //Delete appointment with given id//
+
+  function cancelInterview(id) {
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    }
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    return axios.delete(`/api/appointments/${id}`)
+      .then((res) => {
+        console.log(res);
+        setState((prev) => ({
+          ...prev,
+          appointments
+        }))
+
+      })
+  }
+
   //Get available interviewer for the day//
   const interviewers = getInterviewersForDay(state, state.day);
 
@@ -77,6 +102,7 @@ export default function Application() {
           interview={interview}
           interviewers={interviewers}
           bookInterview={bookInterview}
+          cancelInterview={cancelInterview}
         />
       );
     }
