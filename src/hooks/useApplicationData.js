@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function useApplicationData() {
@@ -9,8 +9,11 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
-  const setDay = (day) => setState({ ...state, day });
-  // const setDays = (days) => setState((prev) => ({ ...prev, days }));
+  const setDay = (day) =>
+    setState({
+      ...state,
+      day,
+    });
 
   useEffect(() => {
     Promise.all([
@@ -28,74 +31,87 @@ export default function useApplicationData() {
   }, []);
 
   function countSpots(increment) {
-    let days = state.days
+    let days = state.days;
 
-    const currentDay = days.find((dayItem) => dayItem.name === state.day)
-    const newCurrentDay = { ...currentDay, spots: currentDay.spots + increment }
+    const currentDay = days.find(
+      (dayItem) => dayItem.name === state.day
+    );
+    const newCurrentDay = {
+      ...currentDay,
+      spots: currentDay.spots + increment,
+    };
 
     console.log(currentDay);
     console.log(newCurrentDay);
-    return days.map((dayItem) => (dayItem.name === currentDay.name ? newCurrentDay : dayItem))
+    return days.map((dayItem) =>
+      dayItem.name === currentDay.name
+        ? newCurrentDay
+        : dayItem
+    );
   }
 
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
-
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview },
+      interview: {
+        ...interview,
+      },
     };
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-
-    const editing = appointment.interview !== null
+    const editing = appointment.interview !== null;
     let days = [...state.days];
-
 
     //wait until put the data to database and then
 
-    return axios.put(`/api/appointments/${id}`, { interview })
+    return axios
+      .put(`/api/appointments/${id}`, {
+        interview,
+      })
       .then((res) => {
         if (!editing) {
-          days = countSpots(-1)
+          days = countSpots(-1);
         }
+        countSpots(state, id);
         setState((prev) => ({
           ...prev,
           appointments,
-          days
+          days,
         }));
       });
   }
 
-
-
   //Delete appointment with given id//
 
   function cancelInterview(id) {
-
     const appointment = {
       ...state.appointments[id],
-      interview: null
-    }
+      interview: null,
+    };
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    return axios.delete(`/api/appointments/${id}`)
+    return axios
+      .delete(`/api/appointments/${id}`)
       .then((res) => {
-        const days = countSpots(1)
+        const days = countSpots(1);
         setState((prev) => ({
           ...prev,
           appointments,
-          days
-        }))
-
-      })
+          days,
+        }));
+      });
   }
-  return { state, setDay, bookInterview, cancelInterview }
-
+  return {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview,
+  };
 }
