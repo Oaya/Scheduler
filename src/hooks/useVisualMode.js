@@ -6,8 +6,8 @@ export default function useVisualMode(initial) {
   const [history, setHistory] = useState([initial]);
   const [mode, setMode] = useState(initial);
 
-  const transition = function (mode, replace) {
-    setMode(mode);
+  const transition = function (newMode, replace) {
+    setMode(newMode);
     setHistory((prev) => [...prev, mode]);
     if (replace) {
       setHistory(history.splice(history.length - 2, 1, mode));
