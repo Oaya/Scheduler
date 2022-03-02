@@ -31,11 +31,11 @@ export default function useApplicationData() {
     let days = state.days
 
     const currentDay = days.find((dayItem) => dayItem.name === state.day)
-    const newDay = { ...currentDay, spots: currentDay.spots + increment }
+    const newCurrentDay = { ...currentDay, spots: currentDay.spots + increment }
 
     console.log(currentDay);
-    console.log(newDay);
-    return days.map((dayItem) => (dayItem.name === currentDay.name ? newDay : dayItem))
+    console.log(newCurrentDay);
+    return days.map((dayItem) => (dayItem.name === currentDay.name ? newCurrentDay : dayItem))
   }
 
   //Create new interview with given id and interview that user put in the input field//
