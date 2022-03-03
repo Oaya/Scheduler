@@ -30,12 +30,12 @@ export default function useApplicationData() {
     });
   }, []);
 
-  function updateSpots(state, appointments, id) {
+  function updateSpots(state, appointments) {
     const currentDay = state.days.find(
       (dayItem) => dayItem.name === state.day
     );
     let spots = 0;
-    for (const id of currentDay) {
+    for (const id of currentDay.appointments) {
       const appointment = appointments[id];
       if (!appointment.interview) {
         spots++;
@@ -45,29 +45,27 @@ export default function useApplicationData() {
     const newDays = state.days.map((day) =>
       day.name === state.day ? newDay : day
     );
-
+    console.log(newDays);
     return newDays;
   }
 
-  function countSpots(increment) {
-    let days = state.days;
+  // function countSpots(increment) {
+  //   let days = state.days;
 
-    const currentDay = days.find(
-      (dayItem) => dayItem.name === state.day
-    );
-    const newCurrentDay = {
-      ...currentDay,
-      spots: currentDay.spots + increment,
-    };
+  //   const currentDay = days.find(
+  //     (dayItem) => dayItem.name === state.day
+  //   );
+  //   const newCurrentDay = {
+  //     ...currentDay,
+  //     spots: currentDay.spots + increment,
+  //   };
 
-    // console.log(currentDay);
-    // console.log(newCurrentDay);
-    return days.map((dayItem) =>
-      dayItem.name === currentDay.name
-        ? newCurrentDay
-        : dayItem
-    );
-  }
+  //   return days.map((dayItem) =>
+  //     dayItem.name === currentDay.name
+  //       ? newCurrentDay
+  //       : dayItem
+  //   );
+  // }
 
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
@@ -77,13 +75,15 @@ export default function useApplicationData() {
         ...interview,
       },
     };
+
+    // const editing = appointment.interview !== null;
+
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    const editing = appointment.interview !== null;
-    let days = [...state.days];
+    // let days = [...state.days];
 
     //wait until put the data to database and then
 
@@ -92,10 +92,11 @@ export default function useApplicationData() {
         interview,
       })
       .then((res) => {
-        if (!editing) {
-          days = countSpots(-1);
-        }
-        countSpots(state, id);
+        // if (!editing) {
+        //   days = countSpots(-1);
+        // }
+        const days = updateSpots(state, appointments);
+        // countSpots(state, id);
         setState((prev) => ({
           ...prev,
           appointments,
@@ -119,7 +120,8 @@ export default function useApplicationData() {
     return axios
       .delete(`/api/appointments/${id}`)
       .then((res) => {
-        const days = countSpots(1);
+        // const days = countSpots(1);
+        const days = updateSpots(state, appointments);
         setState((prev) => ({
           ...prev,
           appointments,
