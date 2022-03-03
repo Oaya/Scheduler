@@ -19,7 +19,7 @@ export default function Form(props) {
     props.onCancel();
   };
 
-  //Check student name and interviewer filed is filled//
+  //Check student name and interviewer filed is filled or not//
   const validate = () => {
     if (student === "") {
       setError("Student name cannot be blank");

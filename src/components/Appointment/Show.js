@@ -11,6 +11,7 @@ export default function Show({ student, onEdit, onDelete, interviewer }) {
           <h3 className="text--regular">{interviewer && interviewer.name}</h3>
         </section>
       </section>
+
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <img

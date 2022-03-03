@@ -11,10 +11,9 @@ import {
 
 import "components/Application.scss";
 
-
 export default function Application() {
+  //Custom Hook//
   const { state, setDay, bookInterview, cancelInterview } = useApplicationData()
-
 
   //Get available interviewer for the day//
   const interviewers = getInterviewersForDay(state, state.day);
