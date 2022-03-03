@@ -30,6 +30,25 @@ export default function useApplicationData() {
     });
   }, []);
 
+  function updateSpots(state, appointments, id) {
+    const currentDay = state.days.find(
+      (dayItem) => dayItem.name === state.day
+    );
+    let spots = 0;
+    for (const id of currentDay) {
+      const appointment = appointments[id];
+      if (!appointment.interview) {
+        spots++;
+      }
+    }
+    const newDay = { ...currentDay, spots };
+    const newDays = state.days.map((day) =>
+      day.name === state.day ? newDay : day
+    );
+
+    return newDays;
+  }
+
   function countSpots(increment) {
     let days = state.days;
 
@@ -41,8 +60,8 @@ export default function useApplicationData() {
       spots: currentDay.spots + increment,
     };
 
-    console.log(currentDay);
-    console.log(newCurrentDay);
+    // console.log(currentDay);
+    // console.log(newCurrentDay);
     return days.map((dayItem) =>
       dayItem.name === currentDay.name
         ? newCurrentDay
