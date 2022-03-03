@@ -11,6 +11,7 @@ import {
 
 import "components/Application.scss";
 
+
 export default function Application() {
   const { state, setDay, bookInterview, cancelInterview } = useApplicationData()
 

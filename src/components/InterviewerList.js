@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from 'prop-types'
 
 import InterviewerListItem from "./InterviewerListItem";
+
 import "components/InterviewerList.scss";
 
-export default function InterviewerList(props) {
-  const { interviewer, interviewers, onChange } = props;
+export default function InterviewerList({ interviewer, interviewers, onChange }) {
 
   const interviewerList = interviewers.map((person) => (
     <InterviewerListItem

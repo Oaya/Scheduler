@@ -11,7 +11,7 @@ import Error from "./Error";
 
 import "components/Appointment/styles.scss";
 
-//MODE FOR APPOINTMENT//
+//Mode for Appointment//
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
@@ -30,11 +30,26 @@ export default function Appointment({
   bookInterview,
   cancelInterview,
 }) {
+
+  //Custom Hook//
   const { mode, transition, back } = useVisualMode(
     interview ? SHOW : EMPTY
   );
 
+  //Cancel the action and  back to the previous mode//
   function onCancel() {
+    back();
+  }
+
+  function onTransition() {
+    transition(CONFIRM);
+  }
+
+  function onEdit() {
+    transition(EDIT);
+  }
+
+  function onClose() {
     back();
   }
 
@@ -62,17 +77,6 @@ export default function Appointment({
       .catch((err) => {
         transition(ERROR_DELETE, true);
       });
-  }
-  function onTransition() {
-    transition(CONFIRM);
-  }
-
-  function onEdit() {
-    transition(EDIT);
-  }
-
-  function onClose() {
-    back();
   }
 
   return (

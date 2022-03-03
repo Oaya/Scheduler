@@ -1,4 +1,5 @@
 export function getAppointmentsForDay(state, day) {
+
   //find the object match with provided day
   const appointmentDayId = state.days.filter(
     (stateDay) => stateDay.name === day

@@ -4,8 +4,9 @@ describe("Appointments", () => {
     cy.visit("/");
     cy.contains("Monday");
   });
-  xit("should book an interview", () => {
-    cy.get("[Alt=Add]").first().click();
+
+  it("should book an interview", () => {
+    cy.get("[alt=Add]").first().click();
     cy.get('[data-testid="student-name-input"]').type(
       "Lydia Miller-Jones"
     );
@@ -22,7 +23,7 @@ describe("Appointments", () => {
     );
   });
 
-  xit("should edit and interview", () => {
+  it("should edit and interview", () => {
     cy.get(".appointment__card").trigger("mouseover");
     cy.get('[alt="Edit"]').should("be.visible");
 
@@ -32,7 +33,7 @@ describe("Appointments", () => {
       .clear()
       .type("Lydia Miller-Jones");
 
-    cy.get('[Alt="Tori Malcolm"]').click();
+    cy.get('[alt="Tori Malcolm"]').click();
 
     cy.contains("Save").click();
 

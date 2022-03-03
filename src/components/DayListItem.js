@@ -10,6 +10,7 @@ export default function DayListItem(props) {
     "day-list__item--full": spots === 0,
   });
 
+  //Changing the text depends on the spots//
   const formatSpots = (spots) => {
     if (spots === 0) {
       return `no spots `;

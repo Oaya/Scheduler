@@ -8,13 +8,9 @@ export default function useApplicationData() {
     appointments: {},
     interviewers: {},
   });
+  const setDay = (day) => setState({ ...state, day });
 
-  const setDay = (day) =>
-    setState({
-      ...state,
-      day,
-    });
-
+  //Get data from database when render app first time//
   useEffect(() => {
     Promise.all([
       axios.get(`/api/days`),
@@ -30,6 +26,7 @@ export default function useApplicationData() {
     });
   }, []);
 
+  //Update spots number for the state when user create, edit or delete the appointment//
   function updateSpots(state, appointments) {
     const currentDay = state.days.find(
       (dayItem) => dayItem.name === state.day
@@ -45,13 +42,13 @@ export default function useApplicationData() {
     const newDays = state.days.map((day) =>
       day.name === state.day ? newDay : day
     );
-    console.log(newDays);
+
     return newDays;
   }
 
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
-    //change the appointment state//
+    //update the appointment interview //
     const appointment = {
       ...state.appointments[id],
       interview: {
@@ -59,12 +56,13 @@ export default function useApplicationData() {
       },
     };
 
+    //update the appointments//
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    //wait until put the data to database and then
+    //Wait until put the data to database and change the state//
     return axios
       .put(`/api/appointments/${id}`, {
         interview,
@@ -82,7 +80,7 @@ export default function useApplicationData() {
 
   //Delete appointment with given id//
   function cancelInterview(id) {
-    //change the appointment state//
+
     const appointment = {
       ...state.appointments[id],
       interview: null,
