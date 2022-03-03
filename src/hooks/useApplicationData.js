@@ -49,26 +49,9 @@ export default function useApplicationData() {
     return newDays;
   }
 
-  // function countSpots(increment) {
-  //   let days = state.days;
-
-  //   const currentDay = days.find(
-  //     (dayItem) => dayItem.name === state.day
-  //   );
-  //   const newCurrentDay = {
-  //     ...currentDay,
-  //     spots: currentDay.spots + increment,
-  //   };
-
-  //   return days.map((dayItem) =>
-  //     dayItem.name === currentDay.name
-  //       ? newCurrentDay
-  //       : dayItem
-  //   );
-  // }
-
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
+    //change the appointment state//
     const appointment = {
       ...state.appointments[id],
       interview: {
@@ -76,27 +59,19 @@ export default function useApplicationData() {
       },
     };
 
-    // const editing = appointment.interview !== null;
-
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    // let days = [...state.days];
-
     //wait until put the data to database and then
-
     return axios
       .put(`/api/appointments/${id}`, {
         interview,
       })
       .then((res) => {
-        // if (!editing) {
-        //   days = countSpots(-1);
-        // }
         const days = updateSpots(state, appointments);
-        // countSpots(state, id);
+
         setState((prev) => ({
           ...prev,
           appointments,
@@ -106,8 +81,8 @@ export default function useApplicationData() {
   }
 
   //Delete appointment with given id//
-
   function cancelInterview(id) {
+    //change the appointment state//
     const appointment = {
       ...state.appointments[id],
       interview: null,
@@ -120,7 +95,6 @@ export default function useApplicationData() {
     return axios
       .delete(`/api/appointments/${id}`)
       .then((res) => {
-        // const days = countSpots(1);
         const days = updateSpots(state, appointments);
         setState((prev) => ({
           ...prev,
