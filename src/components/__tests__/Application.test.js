@@ -4,6 +4,7 @@ import {
   render,
   cleanup,
   waitForElement,
+  waitForElementToBeRemoved,
   fireEvent,
   getByText,
   getAllByTestId,
@@ -21,6 +22,7 @@ describe("Application", () => {
     const { getByText } = render(<Application />);
 
     await waitForElement(() => getByText("Monday"));
+
     fireEvent.click(getByText("Tuesday"));
     expect(
       getByText("Leopold Silvers")
@@ -53,5 +55,17 @@ describe("Application", () => {
       getByAltText(appointment, "Sylvia Palmer")
     );
     fireEvent.click(getByText(appointment, "Save"));
+
+    expect(
+      getByText(appointment, "Saving")
+    ).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(() =>
+      getByText(appointment, "Saving")
+    );
+
+    expect(
+      getByText(appointment, "Lydia Miller-Jones")
+    ).toBeInTheDocument();
   });
 });
