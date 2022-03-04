@@ -30,7 +30,6 @@ export default function Appointment({
   bookInterview,
   cancelInterview,
 }) {
-
   //Custom Hook//
   const { mode, transition, back } = useVisualMode(
     interview ? SHOW : EMPTY
@@ -54,7 +53,7 @@ export default function Appointment({
   }
 
   function onSave(name, interviewer) {
-    transition(SAVING);
+    transition(SAVING, true);
 
     const interview = {
       student: name,
@@ -71,7 +70,7 @@ export default function Appointment({
   }
 
   function onDelete() {
-    transition(DELETING, true);
+    transition(DELETING);
 
     cancelInterview(id)
       .then(() => {
@@ -88,7 +87,9 @@ export default function Appointment({
       data-testid="appointment"
     >
       <Header time={time} />
-      {mode === EMPTY && (<Empty onAdd={() => transition(CREATE)} />)}
+      {mode === EMPTY && (
+        <Empty onAdd={() => transition(CREATE)} />
+      )}
       {mode === SHOW && (
         <Show
           student={interview.student}
