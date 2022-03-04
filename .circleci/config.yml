@@ -28,12 +28,12 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "68:12:4d:78:a2:75:7c:cc:7f:cc:f0:c1:58:13:e8:26"
+            - "20:29:2a:d2:1b:fc:78:5a:f0:1e:36:5d:b7:90:84:6d"
       - checkout
       - run:
           name: Push Master to Production
           command: |
-            git push https://github.com/Oaya/scheduler master:production
+            git push https://github.com/Oaya/scheduler.git master:production
 
 workflows:
   version: 2
