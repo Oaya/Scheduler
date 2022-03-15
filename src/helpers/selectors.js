@@ -1,5 +1,4 @@
 export function getAppointmentsForDay(state, day) {
-
   //find the object match with provided day
   const appointmentDayId = state.days.filter(
     (stateDay) => stateDay.name === day
@@ -25,14 +24,17 @@ export function getInterview(state, interview) {
     return null;
   } else {
     const student = interview.student;
-    const interviewer = state.interviewers[interview.interviewer];
+    const interviewer =
+      state.interviewers[interview.interviewer];
     return { student, interviewer };
   }
 }
 
 export function getInterviewersForDay(state, day) {
   //find the object match with provided day
-  const interviewersId = state.days.filter((stateDay) => stateDay.name === day);
+  const interviewersId = state.days.filter(
+    (stateDay) => stateDay.name === day
+  );
   const interviewersIds = interviewersId[0];
   const interviewers = [];
 
