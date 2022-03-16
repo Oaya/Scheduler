@@ -7,15 +7,8 @@ export default function useApplicationData() {
   const SET_INTERVIEW = "SET_INTERVIEW";
 
   function reducer(state, action) {
-    const {
-      type,
-      day,
-      days,
-      appointments,
-      interviewers,
-      interview,
-      id,
-    } = action;
+    const { type, day, days, appointments, interviewers } =
+      action;
     switch (type) {
       case SET_DAY:
         return { ...state, day };
@@ -27,16 +20,7 @@ export default function useApplicationData() {
           interviewers,
         };
       case SET_INTERVIEW: {
-        const appointment = {
-          ...state.appointments[id],
-          interview: interview && { ...interview },
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment,
-        };
-
-        return { ...state, appointments };
+        return { ...state, appointments, days };
       }
       default:
         throw new Error(
@@ -73,6 +57,15 @@ export default function useApplicationData() {
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
     //Wait until put the data to database and change the state//
+    const appointment = {
+      ...state.appointments[id],
+      interview: interview && { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
     return axios
       .put(`/api/appointments/${id}`, {
         interview,
@@ -80,21 +73,30 @@ export default function useApplicationData() {
       .then(() => {
         dispatch({
           type: SET_INTERVIEW,
-          id,
-          interview,
+          appointments,
+          days: updateSpots(state, appointments),
         });
       });
   }
 
   //Delete appointment with given id//
   function cancelInterview(id) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null,
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
     return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
         dispatch({
           type: SET_INTERVIEW,
-          id,
-          interview: null,
+          appointments,
+          days: updateSpots(state, appointments),
         });
       });
   }
@@ -104,4 +106,23 @@ export default function useApplicationData() {
     bookInterview,
     cancelInterview,
   };
+}
+
+function updateSpots(state, appointments) {
+  const currentDay = state.days.find(
+    (dayItem) => dayItem.name === state.day
+  );
+  let spots = 0;
+  for (const id of currentDay.appointments) {
+    const appointment = appointments[id];
+    if (!appointment.interview) {
+      spots++;
+    }
+  }
+  const newDay = { ...currentDay, spots };
+  const newDays = state.days.map((day) =>
+    day.name === state.day ? newDay : day
+  );
+
+  return newDays;
 }
