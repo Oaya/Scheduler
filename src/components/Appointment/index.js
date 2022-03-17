@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useVisualMode from "hooks/useVisualMode";
 import Header from "./Header";
@@ -34,6 +34,15 @@ export default function Appointment({
   const { mode, transition, back } = useVisualMode(
     interview ? SHOW : EMPTY
   );
+
+  // useEffect(() => {
+  //   if (interview && mode === EMPTY) {
+  //     transition(SHOW);
+  //   }
+  //   if (interview === null && mode === EMPTY) {
+  //     transition(EMPTY);
+  //   }
+  // }, [interview, mode, transition]);
 
   //Cancel the action and  back to the previous mode//
   function onCancel() {

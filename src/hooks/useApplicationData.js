@@ -7,11 +7,20 @@ export default function useApplicationData() {
   const SET_INTERVIEW = "SET_INTERVIEW";
 
   function reducer(state, action) {
-    const { type, day, days, appointments, interviewers } =
-      action;
+    const {
+      type,
+      day,
+      days,
+      appointments,
+      interviewers,
+      interview,
+      id,
+    } = action;
+
     switch (type) {
       case SET_DAY:
         return { ...state, day };
+
       case SET_APPLICATION_DATA:
         return {
           ...state,
@@ -19,9 +28,21 @@ export default function useApplicationData() {
           appointments,
           interviewers,
         };
+
       case SET_INTERVIEW: {
+        const appointment = {
+          ...state.appointments[id],
+          interview: interview && { ...interview },
+        };
+
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment,
+        };
+        const days = updateSpots(state, appointments);
         return { ...state, appointments, days };
       }
+
       default:
         throw new Error(
           `No such a type of action: ${type}`
@@ -37,6 +58,24 @@ export default function useApplicationData() {
   });
 
   const setDay = (day) => dispatch({ type: SET_DAY, day });
+
+  useEffect(() => {
+    const webSocket = new WebSocket(
+      process.env.REACT_APP_WEBSOCKET_URL
+    );
+    webSocket.onmessage = (event) => {
+      webSocket.send("Message Received");
+      const data = JSON.parse(event.data);
+
+      if (
+        typeof data === "object" &&
+        data.type === "SET_INTERVIEW"
+      ) {
+        return dispatch(data);
+      }
+    };
+    return () => webSocket.close();
+  }, []);
 
   //Get data from database when render app first time//
   useEffect(() => {
@@ -56,16 +95,6 @@ export default function useApplicationData() {
 
   //Create new interview with given id and interview that user put in the input field//
   function bookInterview(id, interview) {
-    //Wait until put the data to database and change the state//
-    const appointment = {
-      ...state.appointments[id],
-      interview: interview && { ...interview },
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
     return axios
       .put(`/api/appointments/${id}`, {
         interview,
@@ -73,30 +102,21 @@ export default function useApplicationData() {
       .then(() => {
         dispatch({
           type: SET_INTERVIEW,
-          appointments,
-          days: updateSpots(state, appointments),
+          id,
+          interview,
         });
       });
   }
 
   //Delete appointment with given id//
-  function cancelInterview(id) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
+  function cancelInterview(id, interview) {
     return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
         dispatch({
           type: SET_INTERVIEW,
-          appointments,
-          days: updateSpots(state, appointments),
+          id,
+          interview,
         });
       });
   }
