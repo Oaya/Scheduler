@@ -14,13 +14,7 @@ Loading with existing appointments with selected day and show remaining spots fo
 
 For creating new appointment, type user's name and pick an interviewer from the list and save.
 
-![](https://github.com/Oaya/Schduler/blob/master/docs/creating.png?raw=true)
-
-### Transition View
-
-While transition the process
-
-![](https://github.com/Oaya/Schduler/blob/master/docs/transition.png?raw=true)
+![appointment](https://user-images.githubusercontent.com/74119671/158742410-d91de1be-ea2e-400a-a6ed-ccaa9d7c685c.gif)
 
 ### Error View
 
