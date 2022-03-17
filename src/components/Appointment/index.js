@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useVisualMode from "hooks/useVisualMode";
 import Header from "./Header";
@@ -34,6 +34,15 @@ export default function Appointment({
   const { mode, transition, back } = useVisualMode(
     interview ? SHOW : EMPTY
   );
+
+  useEffect(() => {
+    if (interview && mode === EMPTY) {
+      transition(SHOW);
+    }
+    if (interview === null && mode === SHOW) {
+      transition(EMPTY);
+    }
+  }, [interview, transition, mode]);
 
   //Cancel the action and  back to the previous mode//
   function onCancel() {
@@ -87,10 +96,13 @@ export default function Appointment({
       data-testid="appointment"
     >
       <Header time={time} />
-      {mode === EMPTY && (
+      {/* {mode === EMPTY && (
+        <Empty onAdd={() => transition(CREATE)} />
+      )} */}
+      {(mode === EMPTY || mode === SHOW) && !interview && (
         <Empty onAdd={() => transition(CREATE)} />
       )}
-      {mode === SHOW && (
+      {(mode === EMPTY || mode === SHOW) && interview && (
         <Show
           student={interview.student}
           interviewer={interview.interviewer}
